@@ -77,10 +77,8 @@ class _MyAppState extends State<MyApp> {
         });
       };
 
-      isInitialised = await naurt.initialise(
-          apiKey:
-              '64812430-1082-46c4-8d32-80919b8bd81d-c2e96081-84b9-430a-adc7-5f36b7957182',
-          precision: 6);
+      isInitialised =
+          await naurt.initialise(apiKey: '<YOUR_API_KEY_HERE>', precision: 6);
     } on PlatformException {
       isInitialised = false;
     }
