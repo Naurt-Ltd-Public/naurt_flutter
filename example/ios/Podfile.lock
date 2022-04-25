@@ -1,0 +1,50 @@
+PODS:
+  - EasyPermissionX/Base (0.0.2)
+  - Flutter (1.0.0)
+  - flutter_easy_permission (0.0.1):
+    - EasyPermissionX/Base
+    - Flutter
+  - flutter_naurt_sdk (0.0.1):
+    - Flutter
+    - naurt_cocoapod
+    - Zip (= 2.1.2)
+  - naurt_cocoapod (0.5.6):
+    - Zip
+  - permission_handler_apple (9.0.4):
+    - Flutter
+  - Zip (2.1.2)
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - flutter_easy_permission (from `.symlinks/plugins/flutter_easy_permission/ios`)
+  - flutter_naurt_sdk (from `.symlinks/plugins/flutter_naurt_sdk/ios`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
+
+SPEC REPOS:
+  trunk:
+    - EasyPermissionX
+    - naurt_cocoapod
+    - Zip
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  flutter_easy_permission:
+    :path: ".symlinks/plugins/flutter_easy_permission/ios"
+  flutter_naurt_sdk:
+    :path: ".symlinks/plugins/flutter_naurt_sdk/ios"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
+
+SPEC CHECKSUMS:
+  EasyPermissionX: ff4c438f6ee80488f873b4cb921e32d982523067
+  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  flutter_easy_permission: c67b480f134ff748c069cac2d645f873de2b7880
+  flutter_naurt_sdk: 3c3ff334e972a736501bf421afc54de89acc43f4
+  naurt_cocoapod: 516cf5b5850abbd76a456c0a4415957c1fc77f58
+  permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
+  Zip: b3fef584b147b6e582b2256a9815c897d60ddc67
+
+PODFILE CHECKSUM: eb179eda02c4d9ce45db6b1912a419962f739320
+
+COCOAPODS: 1.11.3

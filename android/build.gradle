@@ -1,0 +1,74 @@
+group 'com.naurt.flutter_naurt_sdk'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.0.4'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10"
+    }
+}
+
+
+rootProject.allprojects {
+    repositories {
+        google()
+        maven {
+            name "jitpack"
+            url "https://jitpack.io"
+        }
+        mavenCentral()
+    }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion 31
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    defaultConfig {
+        minSdkVersion 26
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.0"
+    implementation 'com.github.Naurt-Ltd-Public:naurt-android-sdk:8baec72c1b'
+
+    // Kotlin/x + coroutines
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation "androidx.work:work-runtime-ktx:2.7.1"
+    implementation 'androidx.concurrent:concurrent-futures:1.1.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1'
+
+    // Core Functionality
+    implementation 'net.java.dev.jna:jna:5.11.0@aar'
+    implementation 'org.apache.commons:commons-compress:1.21'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+    implementation 'com.google.android.gms:play-services-location:19.0.1' //APK
+}
