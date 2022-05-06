@@ -29,15 +29,18 @@ public class SwiftFlutterNaurtSdk: NSObject, FlutterPlugin, FlutterStreamHandler
           )
           
           subscriptions.removeAll()
+
           subscriptions.append(Naurt.shared.$isInitialised.sink { value in
               result(value)
           })
-          
           subscriptions.append(Naurt.shared.$isValidated.sink { [weak self ] value in
               self?.channel!.invokeMethod("onValidation", arguments: value)
           })
           subscriptions.append(Naurt.shared.$isRunning.sink { [weak self ] value in
               self?.channel!.invokeMethod("onRunning", arguments: value)
+          })
+          subscriptions.append(Naurt.shared.$isValidated.sink { [weak self ] value in
+              self?.channel!.invokeMethod("onTrackingStatus", arguments: value)
           })
           subscriptions.append(Naurt.shared.$naurtPoint.sink { [weak self ] value in
               self?.locationUpdateEventSink?(value?.encode())
@@ -67,6 +70,8 @@ public class SwiftFlutterNaurtSdk: NSObject, FlutterPlugin, FlutterStreamHandler
           Naurt.shared.pause()
       }  else if (call.method == "resume") {
           Naurt.shared.resume()
+      } else if (call.method == "trackingStatus") {
+          result(Naurt.shared.trackingStatus)
       }
   }
     
@@ -83,6 +88,18 @@ public class SwiftFlutterNaurtSdk: NSObject, FlutterPlugin, FlutterStreamHandler
 
 private extension NaurtLocation {
      func encode() -> [String: Any]{
-        return ["latitude": latitude, "longitude":longitude, "timestamp": timestamp]
+        return [
+            "latitude": latitude, 
+            "longitude":longitude,
+            "timestamp": timestamp,
+            "altitude": altitude,
+            "altitude_accuracy": altitude_accuracy,
+            "speed": speed,
+            "speed_accuracy": speed_accuracy,
+            "heading": heading,
+            "heading_accuracy": heading_accuracy,
+            "horizontal_accuracy": horizontal_accuracy,
+            "horizontal_covariance": horizontal_covariance
+        ]
     }
 }

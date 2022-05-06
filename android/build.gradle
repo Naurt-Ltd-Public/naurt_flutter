@@ -55,9 +55,9 @@ android {
     }
 }
 
-dependencies {
+dependencies {0
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.0"
-    implementation 'com.github.Naurt-Ltd-Public:naurt-android-sdk:8baec72c1b'
+    implementation 'com.github.Naurt-Ltd-Public:naurt-android-sdk:1.10.0'
 
     // Kotlin/x + coroutines
     implementation 'androidx.core:core-ktx:1.7.0'
@@ -70,5 +70,4 @@ dependencies {
     implementation 'net.java.dev.jna:jna:5.11.0@aar'
     implementation 'org.apache.commons:commons-compress:1.21'
     implementation 'com.squareup.okhttp3:okhttp:4.9.3'
-    implementation 'com.google.android.gms:play-services-location:19.0.1' //APK
 }

@@ -43,6 +43,8 @@ class FlutterNaurtSdk: FlutterPlugin, MethodCallHandler, EventChannel.StreamHand
   private lateinit var naurtNewJourneyListener: EventListener<NaurtNewJourneyEvent>
   private lateinit var naurtRunningListener: EventListener<NaurtIsRunningEvent>
   private lateinit var naurtHasLocationProviderListener: EventListener<NaurtHasLocationProviderEvent>
+  private lateinit var naurtNewTrackingStatusListener: EventListener<NaurtNewTrackingStatusEvent>
+  private lateinit var naurtNewDeviceReportListener: EventListener<NaurtNewDeviceReportEvent>
 
   private val permissions = arrayOf(
     Manifest.permission.ACCESS_FINE_LOCATION,
@@ -81,10 +83,42 @@ class FlutterNaurtSdk: FlutterPlugin, MethodCallHandler, EventChannel.StreamHand
       "horizontalCovariance" to loc.horizontalCovariance,
       "altitude" to loc.altitude,
       "verticalAccuracy" to loc.verticalAccuracy,
-      "mockedLocation" to loc.spoofReport.mockedLocation,
-      "mockAppsInstalled" to loc.spoofReport.mockAppsInstalled,
-      "mockSettingActive" to loc.spoofReport.mockSettingActive
     )
+  }
+
+  private fun mapDeviceReport(rep: DeviceReport): Map<String, Any> {
+    val pn = rep.processName?: "null"
+    val lm = rep.wasLastLocationMocked?: "null"
+    val hma = rep.hasMockingAppsInstalled?: "null"
+
+    return mapOf(
+      "hasMockingAppsInstalled" to hma,
+      "isDeveloper" to rep.isDeveloper,
+      "isDeviceRooted" to rep.isDeviceRooted,
+      "isInWorkProfile" to rep.isInWorkProfile,
+      "lastReportChange" to rep.lastReportChange,
+      "processName" to pn,
+      "wasLastLocationMocked" to lm
+    )
+  }
+
+  private fun stringifyTrackingStatus(status: NaurtTrackingStatus): String {
+    when (status) {
+      NaurtTrackingStatus.ALREADY_RUNNING -> return "ALREADY_RUNNING"
+      NaurtTrackingStatus.COMPROMISED -> return "COMPROMISED"
+      NaurtTrackingStatus.DEGRADED -> return "DEGRADED"
+      NaurtTrackingStatus.FULL -> return "FULL"
+      NaurtTrackingStatus.INOPERABLE -> return "INOPERABLE"
+      NaurtTrackingStatus.INVALID -> return "INVALID"
+      NaurtTrackingStatus.LOCATION_NOT_ENABLED -> return "LOCATION_NOT_ENABLED"
+      NaurtTrackingStatus.MINIMAL -> return "MINIMAL"
+      NaurtTrackingStatus.NOT_INITIALISED -> return "NOT_INITIALISED"
+      NaurtTrackingStatus.NOT_RUNNING -> return "NOT_RUNNING"
+      NaurtTrackingStatus.NO_PERMISSION -> return "NO_PERMISSION"
+      NaurtTrackingStatus.PAUSED -> return "PAUSED"
+      NaurtTrackingStatus.STOPPED -> return "STOPPED"
+      NaurtTrackingStatus.UNKNOWN -> return "UNKNOWN"
+    }
   }
 
   private fun addListeners() {
@@ -128,6 +162,21 @@ class FlutterNaurtSdk: FlutterPlugin, MethodCallHandler, EventChannel.StreamHand
 
     }
     Sdk.on("NAURT_HAS_LOCATION", naurtHasLocationProviderListener)
+
+    naurtNewTrackingStatusListener = EventListener<NaurtNewTrackingStatusEvent> { p0 ->
+      Handler(Looper.getMainLooper()).post {
+        val toSend = stringifyTrackingStatus(p0.status)
+        channel.invokeMethod("onTrackingStatus", toSend)
+      }
+    }
+    Sdk.on("NAURT_NEW_TRACKING_STATUS", naurtNewTrackingStatusListener)
+
+    naurtNewDeviceReportListener = EventListener<NaurtNewDeviceReportEvent> { p0 ->
+      Handler(Looper.getMainLooper()).post {
+        channel.invokeMethod("onDeviceReport", mapDeviceReport(p0.deviceReport))
+      }
+    }
+    Sdk.on("NAURT_NEW_DEVICE_REPORT", naurtNewDeviceReportListener)
   }
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -193,25 +242,39 @@ class FlutterNaurtSdk: FlutterPlugin, MethodCallHandler, EventChannel.StreamHand
         "start" -> {
           Sdk.start().thenAccept {
             val result: MethodChannel.Result = MainThreadResult(rawResult)
-            result.success(it)
+            result.success(stringifyTrackingStatus(it))
           }
         }
         "stop" -> {
           Sdk.stop().thenAccept {
             val result: MethodChannel.Result = MainThreadResult(rawResult)
-            result.success(it)
+            result.success(stringifyTrackingStatus(it))
           }
         }
         "pause" -> {
           Sdk.pause().thenAccept {
             val result: MethodChannel.Result = MainThreadResult(rawResult)
-            result.success(it)
+            result.success(stringifyTrackingStatus(it))
           }
         }
         "resume" -> {
           Sdk.resume(applicationContext).thenAccept {
             val result: MethodChannel.Result = MainThreadResult(rawResult)
-            result.success(it)
+            result.success(stringifyTrackingStatus(it))
+          }
+        }
+        "trackingStatus" -> {
+          val result: MethodChannel.Result = MainThreadResult(rawResult)
+          result.success(stringifyTrackingStatus(Sdk.trackingStatus))
+        }
+        "deviceReport" -> {
+          val result: MethodChannel.Result = MainThreadResult(rawResult)
+
+          if (Sdk.deviceReport != null) {
+            result.success(mapDeviceReport(Sdk.deviceReport!!))
+          }
+          else {
+            result.success(null)
           }
         }
         else -> {

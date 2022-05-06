@@ -26,6 +26,10 @@ class Naurt {
         onRunning?.call(call.arguments);
       } else if (call.method == 'onInitialisation') {
         onInitialised?.call(call.arguments);
+      } else if (call.method == 'onTrackingStatus') {
+        onTrackingStatus?.call(call.arguments);
+      } else if (call.method == 'onDeviceReport') {
+        onDeviceReport?.call(call.arguments);
       }
     });
   }
@@ -46,6 +50,8 @@ class Naurt {
   ValueChanged<bool>? onValidation;
   ValueChanged<bool>? onRunning;
   ValueChanged<bool>? onInitialised;
+  ValueChanged<AndroidDeviceReport>? onDeviceReport;
+  ValueChanged<String>? onTrackingStatus;
 
   /// Is the API key provided to this state valid with the Naurt API server?
   Future<bool> isValidated() async {
@@ -99,20 +105,33 @@ class Naurt {
     return journeyUuid;
   }
 
+  /// The Current tracking status - Unknown if no status is avalible
+  Future<String?> trackingStatus() async {
+    final String? trackingStatus =
+        await _channel.invokeMethod('trackingStatus');
+    return trackingStatus;
+  }
+
+  /// The Current device report - null if no report is availible
+  Future<String?> androidDeviceReport() async {
+    final String? deviceReport = await _channel.invokeMethod('deviceReport');
+    return deviceReport;
+  }
+
   /// Start Naurt Locomotion
-  Future<bool> start() async {
+  Future<String> start() async {
     return await _channel.invokeMethod('start');
   }
 
-  Future<bool> stop() async {
+  Future<String> stop() async {
     return await _channel.invokeMethod('stop');
   }
 
-  Future<bool> pause() async {
+  Future<String> pause() async {
     return await _channel.invokeMethod('pause');
   }
 
-  Future<bool> resume() async {
+  Future<String> resume() async {
     return await _channel.invokeMethod('resume');
   }
 }

@@ -69,3 +69,60 @@ class NaurtLocation {
   int get hashCode =>
       latitude.hashCode ^ longitude.hashCode ^ timestamp.hashCode;
 }
+
+class AndroidDeviceReport {
+  final String isDeveloper;
+  final String isDeviceRooted;
+  final String isInWorkProfile;
+  final int lastReportChange;
+  final String processName;
+  final String wasLastLocationMocked;
+  final String hasMockingAppsInstalled;
+  AndroidDeviceReport._({
+    required this.isDeveloper,
+    required this.isDeviceRooted,
+    required this.isInWorkProfile,
+    required this.lastReportChange,
+    required this.processName,
+    required this.wasLastLocationMocked,
+    required this.hasMockingAppsInstalled,
+  });
+
+  factory AndroidDeviceReport.fromMap(Map<String, dynamic> dataMap) {
+    return AndroidDeviceReport._(
+      isDeveloper: dataMap['isDeveloper'],
+      isDeviceRooted: dataMap['isDeviceRooted'],
+      isInWorkProfile: dataMap['isInWorkProfile'],
+      lastReportChange: dataMap['lastReportChange'],
+      processName: dataMap['processName'],
+      wasLastLocationMocked: dataMap['wasLastLocationMocked'],
+      hasMockingAppsInstalled: dataMap['hasMockingAppsInstalled'],
+    );
+  }
+
+  @override
+  String toString() =>
+      'AndroidDeviceReport<wasLastLocationMocked: $wasLastLocationMocked, hasMockingAppsInstalled: $hasMockingAppsInstalled lastReportChange: $lastReportChange>';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is AndroidDeviceReport &&
+        other.isDeveloper == isDeveloper &&
+        other.isDeviceRooted == isDeviceRooted &&
+        other.processName == processName &&
+        other.wasLastLocationMocked == wasLastLocationMocked &&
+        other.hasMockingAppsInstalled == hasMockingAppsInstalled &&
+        other.isInWorkProfile == isInWorkProfile;
+  }
+
+  @override
+  int get hashCode =>
+      isDeveloper.hashCode ^
+      isDeviceRooted.hashCode ^
+      processName.hashCode ^
+      wasLastLocationMocked.hashCode ^
+      hasMockingAppsInstalled.hashCode ^
+      isInWorkProfile.hashCode;
+}
