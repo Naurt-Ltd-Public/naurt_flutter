@@ -57,7 +57,7 @@ android {
 
 dependencies {0
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.0"
-    implementation 'com.github.Naurt-Ltd-Public:naurt-android-sdk:1.10.0'
+    implementation 'com.github.Naurt-Ltd-Public:naurt-android-sdk:1.16.1'
 
     // Kotlin/x + coroutines
     implementation 'androidx.core:core-ktx:1.7.0'

@@ -15,16 +15,9 @@ Pod::Spec.new do |s|
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'Zip', '2.1.2'
-  s.dependency 'naurt_cocoapod'
+  s.dependency 'Naurt.swift', '0.0.3'
   s.platform = :ios, '13.4'
 
-  # s.preserve_paths = 'naurt_xcframework.framework'
-  s.xcconfig = { 'ENABLE_BITCODE' => 'NO', }
-  # s.vendored_frameworks = 'naurt_xcframework.framework'
-
-  # Flutter.framework does not contain a i386 slice.
-  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
   s.swift_version = '5.0'
 end
 

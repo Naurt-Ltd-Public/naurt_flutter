@@ -18,9 +18,12 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.EventChannel
 
-import com.naurt.Sdk.INSTANCE as Sdk
+import com.naurt.Naurt as Sdk
+import com.naurt.NaurtEvents.*
+import com.naurt.NaurtDeviceReport
+import com.naurt.NaurtEventListener
+import com.naurt.NaurtNewLocationEvent
 import com.naurt.*
-import com.naurt.events.*
 
 
 /** FlutterNaurtSdk */
@@ -36,15 +39,15 @@ class FlutterNaurtSdk: FlutterPlugin, MethodCallHandler, EventChannel.StreamHand
 
   private var unorderedScope: CoroutineScope = CoroutineScope(Dispatchers.Default)
 
-  private lateinit var naurtLocationListener: EventListener<NaurtNewLocationEvent>
-  private lateinit var naurtOnlineListener: EventListener<NaurtIsOnlineEvent>
-  private lateinit var naurtIsInitialisedListener: EventListener<NaurtIsInitialisedEvent>
-  private lateinit var naurtIsValidatedListener: EventListener<NaurtIsValidatedEvent>
-  private lateinit var naurtNewJourneyListener: EventListener<NaurtNewJourneyEvent>
-  private lateinit var naurtRunningListener: EventListener<NaurtIsRunningEvent>
-  private lateinit var naurtHasLocationProviderListener: EventListener<NaurtHasLocationProviderEvent>
-  private lateinit var naurtNewTrackingStatusListener: EventListener<NaurtNewTrackingStatusEvent>
-  private lateinit var naurtNewDeviceReportListener: EventListener<NaurtNewDeviceReportEvent>
+  private lateinit var naurtLocationListener: NaurtEventListener<NaurtNewLocationEvent>
+  private lateinit var naurtOnlineListener: NaurtEventListener<NaurtIsOnlineEvent>
+  private lateinit var naurtIsInitialisedListener: NaurtEventListener<NaurtIsInitialisedEvent>
+  private lateinit var naurtIsValidatedListener: NaurtEventListener<NaurtIsValidatedEvent>
+  private lateinit var naurtNewJourneyListener: NaurtEventListener<NaurtNewJourneyEvent>
+  private lateinit var naurtRunningListener: NaurtEventListener<NaurtIsRunningEvent>
+  private lateinit var naurtHasLocationProviderListener: NaurtEventListener<NaurtHasLocationProviderEvent>
+  private lateinit var naurtNewTrackingStatusListener: NaurtEventListener<NaurtNewTrackingStatusEvent>
+  private lateinit var naurtNewDeviceReportListener: NaurtEventListener<NaurtNewDeviceReportEvent>
 
   private val permissions = arrayOf(
     Manifest.permission.ACCESS_FINE_LOCATION,
@@ -86,7 +89,7 @@ class FlutterNaurtSdk: FlutterPlugin, MethodCallHandler, EventChannel.StreamHand
     )
   }
 
-  private fun mapDeviceReport(rep: DeviceReport): Map<String, Any> {
+  private fun mapDeviceReport(rep: NaurtDeviceReport): Map<String, Any> {
     val pn = rep.processName?: "null"
     val lm = rep.wasLastLocationMocked?: "null"
     val hma = rep.hasMockingAppsInstalled?: "null"
@@ -122,61 +125,61 @@ class FlutterNaurtSdk: FlutterPlugin, MethodCallHandler, EventChannel.StreamHand
   }
 
   private fun addListeners() {
-    naurtLocationListener = EventListener<NaurtNewLocationEvent> { p0 ->
+    naurtLocationListener = NaurtEventListener<NaurtNewLocationEvent> { p0 ->
       locationUpdateEventSink?.success(mapLocation(p0.newPoint));
     }
-    Sdk.on("NAURT_NEW_POINT", naurtLocationListener)
+    Sdk.on(NaurtEvents.NEW_LOCATION, naurtLocationListener)
 
-    naurtOnlineListener = EventListener<NaurtIsOnlineEvent> { p0 ->
+    naurtOnlineListener = NaurtEventListener<NaurtIsOnlineEvent> { p0 ->
 
     }
-    Sdk.on("NAURT_IS_ONLINE", naurtOnlineListener)
+    Sdk.on(NaurtEvents.IS_ONLINE, naurtOnlineListener)
 
-    naurtIsInitialisedListener = EventListener<NaurtIsInitialisedEvent> { p0 ->
+    naurtIsInitialisedListener = NaurtEventListener<NaurtIsInitialisedEvent> { p0 ->
       Handler(Looper.getMainLooper()).post {
         channel.invokeMethod("onInitialisation", p0.isInitialised)
       }
     }
-    Sdk.on("NAURT_IS_INITIALISED", naurtIsInitialisedListener)
+    Sdk.on(NaurtEvents.IS_INITIALISED, naurtIsInitialisedListener)
 
-    naurtIsValidatedListener = EventListener<NaurtIsValidatedEvent> { p0 ->
+    naurtIsValidatedListener = NaurtEventListener<NaurtIsValidatedEvent> { p0 ->
       Handler(Looper.getMainLooper()).post {
         channel.invokeMethod("onValidation", p0.isValidated)
       }
     }
-    Sdk.on("NAURT_IS_VALIDATED", naurtIsValidatedListener)
+    Sdk.on(NaurtEvents.IS_VALIDATED, naurtIsValidatedListener)
 
-    naurtNewJourneyListener = EventListener<NaurtNewJourneyEvent> { p0 ->
+    naurtNewJourneyListener = NaurtEventListener<NaurtNewJourneyEvent> { p0 ->
 
     }
-    Sdk.on("NAURT_NEW_JOURNEY", naurtNewJourneyListener)
+    Sdk.on(NaurtEvents.NEW_JOURNEY, naurtNewJourneyListener)
 
-    naurtRunningListener = EventListener<NaurtIsRunningEvent> { p0 ->
+    naurtRunningListener = NaurtEventListener<NaurtIsRunningEvent> { p0 ->
       Handler(Looper.getMainLooper()).post {
         channel.invokeMethod("onRunning", p0.isRunning)
       }
     }
-    Sdk.on("NAURT_IS_RUNNING", naurtRunningListener)
+    Sdk.on(NaurtEvents.IS_RUNNING, naurtRunningListener)
 
-    naurtHasLocationProviderListener = EventListener<NaurtHasLocationProviderEvent> { p0 ->
+    naurtHasLocationProviderListener = NaurtEventListener<NaurtHasLocationProviderEvent> { p0 ->
 
     }
-    Sdk.on("NAURT_HAS_LOCATION", naurtHasLocationProviderListener)
+    Sdk.on(NaurtEvents.HAS_LOCATION_PROVIDER, naurtHasLocationProviderListener)
 
-    naurtNewTrackingStatusListener = EventListener<NaurtNewTrackingStatusEvent> { p0 ->
+    naurtNewTrackingStatusListener = NaurtEventListener<NaurtNewTrackingStatusEvent> { p0 ->
       Handler(Looper.getMainLooper()).post {
         val toSend = stringifyTrackingStatus(p0.status)
         channel.invokeMethod("onTrackingStatus", toSend)
       }
     }
-    Sdk.on("NAURT_NEW_TRACKING_STATUS", naurtNewTrackingStatusListener)
+    Sdk.on(NaurtEvents.NEW_TRACKING_STATUS, naurtNewTrackingStatusListener)
 
-    naurtNewDeviceReportListener = EventListener<NaurtNewDeviceReportEvent> { p0 ->
+    naurtNewDeviceReportListener = NaurtEventListener<NaurtNewDeviceReportEvent> { p0 ->
       Handler(Looper.getMainLooper()).post {
-        channel.invokeMethod("onDeviceReport", mapDeviceReport(p0.deviceReport))
+        channel.invokeMethod("onDeviceReport", mapDeviceReport(p0.NaurtDeviceReport))
       }
     }
-    Sdk.on("NAURT_NEW_DEVICE_REPORT", naurtNewDeviceReportListener)
+    Sdk.on(NaurtEvents.NEW_DEVICE_REPORT, naurtNewDeviceReportListener)
   }
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -199,10 +202,9 @@ class FlutterNaurtSdk: FlutterPlugin, MethodCallHandler, EventChannel.StreamHand
 
           addListeners()
 
-          Sdk.initialise(
+          Sdk.initialiseService(
             call.argument<String>("apiKey")!!,
-            applicationContext,
-            call.argument<Int>("precision")!!
+            applicationContext
           ).thenAccept {
             val result: MethodChannel.Result = MainThreadResult(rawResult)
             result.success(it)

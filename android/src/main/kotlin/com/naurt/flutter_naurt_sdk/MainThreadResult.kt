@@ -19,7 +19,7 @@ internal class MainThreadResult internal constructor(result: MethodChannel.Resul
 
     override
     fun error(
-        errorCode: String?, errorMessage: String?, errorDetails: Any?
+        errorCode: String, errorMessage: String, errorDetails: Any?
     ) {
         handler.post(
             Runnable { result.error(errorCode, errorMessage, errorDetails) })

@@ -1,7 +1,8 @@
 import Flutter
 import Combine
 import UIKit
-import naurt_framework
+import NaurtSDK 
+
 
 public class SwiftFlutterNaurtSdk: NSObject, FlutterPlugin, FlutterStreamHandler {
     

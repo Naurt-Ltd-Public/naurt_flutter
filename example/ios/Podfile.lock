@@ -6,10 +6,11 @@ PODS:
     - Flutter
   - flutter_naurt_sdk (0.0.1):
     - Flutter
-    - naurt_cocoapod
-    - Zip (= 2.1.2)
-  - naurt_cocoapod (0.6.0):
-    - Zip
+    - Naurt.swift (= 0.0.3)
+  - LASwift (0.2.5)
+  - Naurt.swift (0.0.3):
+    - LASwift (~> 0.2.5)
+    - Zip (~> 2.1.2)
   - permission_handler_apple (9.0.4):
     - Flutter
   - Zip (2.1.2)
@@ -23,7 +24,8 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - EasyPermissionX
-    - naurt_cocoapod
+    - LASwift
+    - Naurt.swift
     - Zip
 
 EXTERNAL SOURCES:
@@ -38,10 +40,11 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   EasyPermissionX: ff4c438f6ee80488f873b4cb921e32d982523067
-  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_easy_permission: c67b480f134ff748c069cac2d645f873de2b7880
-  flutter_naurt_sdk: 3c3ff334e972a736501bf421afc54de89acc43f4
-  naurt_cocoapod: ebb57046910a98938ca274c4716ba0624cc646a0
+  flutter_naurt_sdk: 934194581e4ad9278514d0851b9824542c5378ed
+  LASwift: a820932178025d61856a3c32c51fdfff3b00a42c
+  Naurt.swift: b1a9417931ea08f60834e0c747c1f3fcdbd7bf38
   permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
   Zip: b3fef584b147b6e582b2256a9815c897d60ddc67
 
