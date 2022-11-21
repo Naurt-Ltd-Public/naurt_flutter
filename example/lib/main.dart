@@ -79,8 +79,7 @@ class _MyAppState extends State<MyApp> {
 
       isInitialised = await naurt.initialise(
           apiKey:
-              '2a56e73b-acb4-4579-9faf-1d5ec2283394-e2757307-4fdd-4005-a092-ca3bb53de56e',
-          precision: 6);
+              '2a56e73b-acb4-4579-9faf-1d5ec2283394-e2757307-4fdd-4005-a092-ca3bb53de56e');
     } on PlatformException {
       isInitialised = false;
     }
@@ -96,54 +95,64 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Naurt SDK'),
-          actions: [
-            TextButton(
-                onPressed: () async {
-                  final isRunning = await Naurt.shared.isRunning();
+          appBar: AppBar(
+            title: const Text('Naurt SDK'),
+            actions: [
+              TextButton(
+                  onPressed: () async {
+                    final isRunning = await Naurt.shared.isRunning();
 
-                  if (isRunning) {
-                    final couldStop = await Naurt.shared.stop();
-                  } else {
-                    final couldStart = await Naurt.shared.start();
-                  }
-                },
-                child: const Text(
-                  'Toggle Recording',
-                  style: TextStyle(color: Colors.white),
-                ))
-          ],
-        ),
-        body: Card(
-            margin: const EdgeInsets.all(16),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  StatusRow(
-                    title: 'Is Initialised?',
-                    isValid: isInitialised,
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  StatusRow(
-                    title: 'Is Validated?',
-                    isValid: isValidated,
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  StatusRow(
-                    title: 'Is Running?',
-                    isValid: isRunning,
-                  )
-                ],
-              ),
-            )),
-      ),
+                    if (isRunning) {
+                      final couldStop = await Naurt.shared.stop();
+                    } else {
+                      final couldStart = await Naurt.shared.start();
+                    }
+                  },
+                  child: const Text(
+                    'Toggle Recording',
+                    style: TextStyle(color: Colors.white),
+                  ))
+            ],
+          ),
+          body: Column(
+            children: <Widget>[
+              Card(
+                  margin: const EdgeInsets.all(16),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        StatusRow(
+                          title: 'Is Initialised?',
+                          isValid: isInitialised,
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        StatusRow(
+                          title: 'Is Validated?',
+                          isValid: isValidated,
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        StatusRow(
+                          title: 'Is Running?',
+                          isValid: isRunning,
+                        )
+                      ],
+                    ),
+                  )),
+              Card(
+                  margin: const EdgeInsets.all(16),
+                  child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: const [Text('Latitude:'), Text('Longitude:')])))
+            ],
+          )),
     );
   }
 }
@@ -151,6 +160,7 @@ class _MyAppState extends State<MyApp> {
 class StatusRow extends StatelessWidget {
   final String title;
   final bool isValid;
+
   const StatusRow({Key? key, required this.title, required this.isValid})
       : super(key: key);
 

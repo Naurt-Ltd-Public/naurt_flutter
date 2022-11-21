@@ -38,10 +38,9 @@ class Naurt {
 
   /// Returns true if the Naurt SDK is initialized
   Future<bool> initialise(
-      {required String apiKey, required int precision}) async {
+      {required String apiKey}) async {
     final bool isInitialised = await _channel.invokeMethod('initialise', {
-      'apiKey': apiKey,
-      'precision': precision,
+      'apiKey': apiKey
     });
 
     return isInitialised;

@@ -17,13 +17,12 @@ internal class MainThreadResult internal constructor(result: MethodChannel.Resul
         handler.post( Runnable { result.success(p0) })
     }
 
-    override
-    fun error(
-        errorCode: String, errorMessage: String, errorDetails: Any?
-    ) {
+    override fun error(errorCode: String, errorMessage: String?, errorDetails: Any?) {
         handler.post(
             Runnable { result.error(errorCode, errorMessage, errorDetails) })
     }
+
+
 
     override
     fun notImplemented() {
